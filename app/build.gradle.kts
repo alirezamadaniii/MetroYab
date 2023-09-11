@@ -1,6 +1,10 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -27,11 +31,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+
+
+
+    buildFeatures {
+        dataBinding = true
     }
 }
 
@@ -53,4 +63,34 @@ dependencies {
     //Play Services
     implementation("com.google.android.gms:play-services-gcm:17.0.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
+    //dexter
+    implementation("com.karumi:dexter:6.2.3")
+
+    //retrofit
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.4")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4")
+    implementation("com.github.ihsanbal:LoggingInterceptor:3.1.0") {
+        exclude("org.json","json")
+    }
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    // Lifecycles
+    val lifecycle_version = "2.6.1"
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
+
 }
+
+    kapt {
+    correctErrorTypes = true
+    }

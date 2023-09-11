@@ -6,9 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <org.neshan.mapsdk.MapView
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.metroyab.presentation.ui.TestFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map"/>
-
+        tools:layout_editor_absoluteX="244dp"
+        tools:layout_editor_absoluteY="147dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
