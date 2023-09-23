@@ -82,7 +82,7 @@ class MapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_map, container, false)
         return binding.root
@@ -102,11 +102,15 @@ class MapFragment : Fragment() {
                 binding.map.moveCamera(
                     LatLng(userLocation!!.latitude, userLocation!!.longitude), 0.50f
                 )
-                search("ایستگاه مترو",35.64052059356129,51.36246452832407)
-                binding.map.setZoom(16F, 0.50f)
+                search("ایستگاه مترو",userLocation!!.latitude, userLocation!!.longitude)
+                binding.map.setZoom(18F, 0.50f)
             }
         }
+        
 
+            binding.btn2.setOnClickListener {
+                Log.i(TAG, "onViewCreated: ${userLocation!!.latitude + userLocation!!.longitude}")
+            }
     }
 
 
