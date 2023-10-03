@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.metroyab.presentation.ui.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment2"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.metroyab.presentation.ui.map.MapFragment"
+        android:label="MapFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.metroyab.presentation.ui.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_routingFragment"
+            app:destination="@id/routingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/routingFragment"
+        android:name="com.example.metroyab.presentation.ui.routing.RoutingFragment"
+        android:label="RoutingFragment" >
+        <action
+            android:id="@+id/action_routingFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+</navigation>

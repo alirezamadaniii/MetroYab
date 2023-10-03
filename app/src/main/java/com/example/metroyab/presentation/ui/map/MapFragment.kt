@@ -96,21 +96,21 @@ class MapFragment : Fragment() {
         //config and start map
         onMapReady()
 
-        binding.btn.setOnClickListener {
-            startLocationUpdates()
-            if (userLocation != null) {
-                binding.map.moveCamera(
-                    LatLng(userLocation!!.latitude, userLocation!!.longitude), 0.50f
-                )
-                search("ایستگاه مترو",userLocation!!.latitude, userLocation!!.longitude)
-                binding.map.setZoom(18F, 0.50f)
-            }
-        }
-        
-
-            binding.btn2.setOnClickListener {
-                Log.i(TAG, "onViewCreated: ${userLocation!!.latitude + userLocation!!.longitude}")
-            }
+//        binding.btn.setOnClickListener {
+//            startLocationUpdates()
+//            if (userLocation != null) {
+//                binding.map.moveCamera(
+//                    LatLng(userLocation!!.latitude, userLocation!!.longitude), 0.50f
+//                )
+//                search("ایستگاه مترو",userLocation!!.latitude, userLocation!!.longitude)
+//                binding.map.setZoom(18F, 0.50f)
+//            }
+//        }
+//
+//
+//            binding.btn2.setOnClickListener {
+//                Log.i(TAG, "onViewCreated: ${userLocation!!.latitude + userLocation!!.longitude}")
+//            }
     }
 
 
