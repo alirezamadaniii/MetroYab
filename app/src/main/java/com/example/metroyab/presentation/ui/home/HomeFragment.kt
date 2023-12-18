@@ -26,9 +26,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Handler(Looper.getMainLooper()).postDelayed({
+
+        binding.btnRouting.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_routingFragment)
-        },3000)
+        }
+
+        binding.btnNearestMetro.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_mapFragment)
+        }
+
     }
 
 }

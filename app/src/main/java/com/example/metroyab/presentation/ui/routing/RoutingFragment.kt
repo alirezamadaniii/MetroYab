@@ -27,7 +27,7 @@ class RoutingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_routingFragment_to_mapFragment)
+//            findNavController().navigate(R.id.action_routingFragment_to_mapFragment)
         },3000)
     }
 

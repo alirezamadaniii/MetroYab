@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="200dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/bus_svgrepo_com"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_station_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/iran_yekan_bold"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView3"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView3"
+            tools:text="ایستگاه فردوسی" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/materialTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/iran_yekan_regular"
+            android:text="فاصله تا ایستگاه:"
+            app:layout_constraintEnd_toEndOf="@+id/txt_station_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_station_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_routing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iran_yekan_x_fa_num_bold"
+            android:paddingEnd="4dp"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/materialTextView2"
+            app:layout_constraintEnd_toStartOf="@+id/materialTextView2"
+            app:layout_constraintTop_toTopOf="@+id/materialTextView2"
+            tools:text="1.2" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_routing_map"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/iran_yekan_bold"
+            android:text="مسیریابی"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatImageView3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+
+</layout>

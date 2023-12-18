@@ -32,7 +32,7 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton"
+        android:id="@+id/btn_routing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -47,18 +47,19 @@
         app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_nearest_metro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:backgroundTint="@color/white"
         android:fontFamily="@font/iran_yekan_bold"
         android:text="نزدیکترین مترو"
-        android:layout_marginTop="16dp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialButton" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_routing" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

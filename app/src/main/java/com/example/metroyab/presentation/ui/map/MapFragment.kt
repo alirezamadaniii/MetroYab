@@ -13,14 +13,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.carto.BuildConfig
 import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.example.metroyab.R
+import com.example.metroyab.data.utlis.Resource
 import com.example.metroyab.databinding.FragmentMapBinding
+import com.example.metroyab.presentation.adapter.NearestMetroAdapter
 import com.example.metroyab.presentation.viewmodel.MapViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -40,22 +47,23 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.Date
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.example.metroyab.data.utlis.Resource
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
 
     private lateinit var binding:FragmentMapBinding
     private  val viewModel: MapViewModel by viewModels()
+
+    @Inject
+    lateinit var nearestMetroAdapter: NearestMetroAdapter
 
     private var settingsClient: SettingsClient? = null
     private lateinit var locationSettingsRequest: LocationSettingsRequest
@@ -79,6 +87,9 @@ class MapFragment : Fragment() {
     private var dialogDismisses = false
 
     val REQUEST_CODE = 123
+
+    var latitude = 0.0
+    var longitude = 0.0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -92,25 +103,47 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getResponse()
+
         //config and start map
         onMapReady()
 
-//        binding.btn.setOnClickListener {
-//            startLocationUpdates()
-//            if (userLocation != null) {
-//                binding.map.moveCamera(
-//                    LatLng(userLocation!!.latitude, userLocation!!.longitude), 0.50f
-//                )
-//                search("ایستگاه مترو",userLocation!!.latitude, userLocation!!.longitude)
-//                binding.map.setZoom(18F, 0.50f)
-//            }
-//        }
-//
-//
-//            binding.btn2.setOnClickListener {
-//                Log.i(TAG, "onViewCreated: ${userLocation!!.latitude + userLocation!!.longitude}")
-//            }
+        binding.fabGps.setOnClickListener {
+            startLocationUpdates()
+            if (userLocation != null) {
+                binding.map.moveCamera(
+                    LatLng(userLocation!!.latitude, userLocation!!.longitude), 0.50f
+                )
+                binding.map.setZoom(18F, 0.50f)
+            }
+        }
+
+            binding.btnOriginSelect.setOnClickListener {
+                addMarker()
+                search("ایستگاه مترو",latitude,longitude)
+                getResponse()
+            }
+
+        nearestMetroAdapter.setOnItemClick {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr=${latitude},${longitude}&daddr=${it.location.y},${it.location.x}")
+            )
+            startActivity(intent)
+        }
+    }
+
+    private fun addMarker(){
+        // when  clicked on map, a marker is added in clicked location
+        latitude = binding.map.cameraTargetPosition.latitude
+        longitude = binding.map.cameraTargetPosition.longitude
+    }
+
+
+    private fun setupRecyclerView() {
+        binding.recyNearestMetro.apply {
+            adapter = nearestMetroAdapter
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        }
     }
 
 
@@ -286,14 +319,27 @@ class MapFragment : Fragment() {
             viewModel.searchResult.collect{ response->
                 when(response){
                     is Resource.Loading -> {
+                        binding.progressMap.visibility =View.VISIBLE
                     }
                     is Resource.Success -> {
+                        binding.progressMap.visibility =View.GONE
                         response.data.let {
-                            Log.i(TAG, "getResponse: ${it?.items?.get(0)}")
+                            binding.btnOriginSelect.visibility =View.GONE
+//                            val animation: Animation = TranslateAnimation(0f, 0f, 0f, -620f)
+//                            animation.duration = 1000
+//                            animation.fillAfter = true
+//                            binding.fabGps.startAnimation(animation)
+                            setupRecyclerView()
+                            nearestMetroAdapter.differ.submitList(it!!.items.subList(0,5))
                         }
                     }
                     is Resource.Error -> {
-                        response.message.let {}
+                        binding.progressMap.visibility =View.GONE
+                        response.message.let {
+                            Toast.makeText(requireContext(),
+                                "مبدا پیدا نشد، لطفا دوباره سعی کنید",
+                                Toast.LENGTH_LONG).show()
+                        }
                     }
 
                     else -> {}

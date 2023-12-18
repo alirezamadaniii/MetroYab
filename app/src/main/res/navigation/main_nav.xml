@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
     app:startDestination="@id/splashFragment">
 
@@ -23,13 +24,21 @@
         <action
             android:id="@+id/action_homeFragment_to_routingFragment"
             app:destination="@id/routingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/routingFragment"
         android:name="com.example.metroyab.presentation.ui.routing.RoutingFragment"
         android:label="RoutingFragment" >
         <action
-            android:id="@+id/action_routingFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            android:id="@+id/action_routingFragment_to_nearestMetroFragment"
+            app:destination="@id/nearestMetroFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/nearestMetroFragment"
+        android:name="com.example.metroyab.presentation.nearestmetro.NearestMetroFragment"
+        android:label="fragment_nearest_metro"
+        tools:layout="@layout/fragment_nearest_metro" />
 </navigation>
