@@ -20,12 +20,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.carto.BuildConfig
 import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.example.metroyab.R
 import com.example.metroyab.data.utlis.Resource
+import com.example.metroyab.data.utlis.onBackPressed
 import com.example.metroyab.databinding.FragmentMapBinding
 import com.example.metroyab.presentation.adapter.NearestMetroAdapter
 import com.example.metroyab.presentation.viewmodel.MapViewModel
@@ -39,7 +41,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.OnFailureListener
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -54,6 +55,7 @@ import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.Date
 import javax.inject.Inject
+import kotlin.math.log
 
 
 @AndroidEntryPoint
@@ -65,7 +67,7 @@ class MapFragment : Fragment() {
     @Inject
     lateinit var nearestMetroAdapter: NearestMetroAdapter
 
-    private var settingsClient: SettingsClient? = null
+    private var settingsClient: com.google.android.gms.location.SettingsClient? = null
     private lateinit var locationSettingsRequest: LocationSettingsRequest
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
@@ -96,6 +98,7 @@ class MapFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_map, container, false)
+
         return binding.root
     }
 
@@ -129,6 +132,10 @@ class MapFragment : Fragment() {
                 Uri.parse("http://maps.google.com/maps?saddr=${latitude},${longitude}&daddr=${it.location.y},${it.location.x}")
             )
             startActivity(intent)
+        }
+
+        binding.imbBackMap.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -331,6 +338,9 @@ class MapFragment : Fragment() {
 //                            binding.fabGps.startAnimation(animation)
                             setupRecyclerView()
                             nearestMetroAdapter.differ.submitList(it!!.items.subList(0,5))
+                            it!!.items.subList(0,5).forEach {
+                                Log.i(TAG, "getResponse: "+it.title)
+                            }
                         }
                     }
                     is Resource.Error -> {

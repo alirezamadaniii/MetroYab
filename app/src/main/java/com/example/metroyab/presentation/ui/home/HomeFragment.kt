@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.example.metroyab.R
+import com.example.metroyab.data.utlis.onBackPressed
 import com.example.metroyab.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -26,6 +27,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         binding.btnRouting.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_routingFragment)

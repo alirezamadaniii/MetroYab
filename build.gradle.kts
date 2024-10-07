@@ -3,14 +3,19 @@
 
 buildscript {
 
+    val agp_version by extra("8.6.0")
+    val agp_version1 by extra("8.5.0")
     repositories {
-        google()
+        maven {
+        url = uri("https://maven.google.com")
+    }
         mavenCentral()
         //noinspection JcenterRepositoryObsolete
+
+        google()
+
         jcenter()
-        maven {
-            url = uri("https://maven.google.com")
-        }
+
     }
 
 
@@ -34,7 +39,8 @@ buildscript {
 
 
 plugins {
-    id("com.android.application") version "8.1.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.8.0" apply false
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    id("com.android.application") version "8.5.0" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.24" apply false
+    id("com.google.dagger.hilt.android") version "2.50" apply false
+    kotlin("kapt") version "2.0.20"
 }
