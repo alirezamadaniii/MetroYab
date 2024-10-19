@@ -9,12 +9,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -22,14 +25,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.carto.BuildConfig
 import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.example.metroyab.R
+import com.example.metroyab.data.model.Item
 import com.example.metroyab.data.utlis.Resource
+import com.example.metroyab.data.utlis.hideKeyboard
 import com.example.metroyab.data.utlis.onBackPressed
 import com.example.metroyab.databinding.FragmentMapBinding
 import com.example.metroyab.presentation.adapter.NearestMetroAdapter
+import com.example.metroyab.presentation.adapter.SearchBottomSheetAdapter
 import com.example.metroyab.presentation.viewmodel.MapViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -42,6 +49,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -63,9 +71,12 @@ class MapFragment : Fragment() {
 
     private lateinit var binding:FragmentMapBinding
     private  val viewModel: MapViewModel by viewModels()
+    private lateinit var dialog: BottomSheetDialog
 
     @Inject
     lateinit var nearestMetroAdapter: NearestMetroAdapter
+    private lateinit var adapter: SearchBottomSheetAdapter
+    private lateinit var recyclerView: RecyclerView
 
     private var settingsClient: com.google.android.gms.location.SettingsClient? = null
     private lateinit var locationSettingsRequest: LocationSettingsRequest
@@ -107,6 +118,13 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        binding.floatingActionButton.setOnClickListener {
+            search(binding.etSearch.text.toString(),latitude,longitude)
+            getResponseSearch()
+        }
+
+
+
         //config and start map
         onMapReady()
 
@@ -134,9 +152,9 @@ class MapFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding.imbBackMap.setOnClickListener {
-            findNavController().popBackStack()
-        }
+//        binding.imbBackMap.setOnClickListener {
+//            findNavController().popBackStack()
+//        }
     }
 
     private fun addMarker(){
@@ -357,6 +375,56 @@ class MapFragment : Fragment() {
             }
         }
     }
+
+
+    private fun getResponseSearch() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchResult.collect{ response->
+                when(response){
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        response.data.let {
+                            showBottomSheetSearch(it?.items)
+
+                        }
+                    }
+                    is Resource.Error -> {
+                        response.message.let {
+                            Toast.makeText(requireContext(),
+                                "مبدا پیدا نشد، لطفا دوباره سعی کنید",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    //setup recycler view city and show to bottom sheet
+    private fun showBottomSheetSearch(list: List<Item>?) {
+        val dialogView = layoutInflater.inflate(R.layout.bottom_sheet, LinearLayout(context))
+        dialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
+        dialog.setContentView(dialogView)
+        recyclerView = dialogView.findViewById(R.id.recyyy)
+        adapter = SearchBottomSheetAdapter(list) { selectedItem: Item ->
+            listItemClicked(selectedItem)
+        }
+        recyclerView.adapter = adapter
+        dialog.show()
+    }
+
+
+    private fun listItemClicked(list: Item) {
+        binding.map.moveCamera(
+            LatLng(list.location.y,list.location.x), 0.50f
+        )
+        binding.map.setZoom(18F, 0.50f)
+        dialog.dismiss()
+    }
+
 
 
     private fun search(term:String,lat:Double,lng:Double) {
